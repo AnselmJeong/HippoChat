@@ -35,7 +35,7 @@ def clear_everything():
     
 def get_directories(path="./"):
     directories = [d for d in os.listdir(path) 
-                   if os.path.isdir(d) and d.startswith(".") and d.endswith("venv")
+                   if os.path.isdir(d) and d.startswith("+")
                    ]
     directories.insert(0, "None")
     return directories
@@ -54,13 +54,16 @@ def post_ingestion(message):
     
 def create_new_project():
     if len(st.session_state['new_project_input']) > 0:
-        new_directory = '.' + st.session_state['new_project_input']
+        new_directory = '+' + st.session_state['new_project_input']
         if not os.path.exists(new_directory):
             os.mkdir(new_directory)
             st.session_state['directories'] = get_directories()
             
-        st.session_state['current_project'] = new_directory
-        new_project_container.warning(f"New project created: {st.session_state['current_project']}")
+            st.session_state['current_project'] = new_directory
+            new_project_container.warning(f"New project created: {st.session_state['current_project']}")
+        else:
+            st.error("Directory already exists")
+        
 
         
 def project_changed():
@@ -170,6 +173,7 @@ with st.sidebar:
             st.text_input("Name of the new project", 
                           key="new_project_input",
                           on_change=create_new_project)
+            
             
     with task_container:
         st.session_state['todo'] = st.selectbox(

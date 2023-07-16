@@ -1,11 +1,11 @@
 import langchain
+import openai
 from langchain.chat_models import ChatOpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
-from langchain.chains import RetrievalQA
 from langchain.chains.summarize import load_summarize_chain
-from langchain.document_loaders import UnstructuredPDFLoader, RecursiveUrlLoader
+from langchain.document_loaders import UnstructuredPDFLoader
 
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor
@@ -21,10 +21,6 @@ from langchain.schema import Document
 
 import os, requests
 from glob import glob
-
-from dotenv import find_dotenv, load_dotenv
-
-load_dotenv(find_dotenv())
 
 
 prefix="""
@@ -59,6 +55,24 @@ def get_doc_type(file_path):
             return ext[1:]
     return False
 
+
+
+
+def is_openai_key_valid():
+    try:
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt="This is a test.",
+            max_tokens=5
+        )
+    except:
+        return False
+    else:
+        return True
+
+def set_openai_key(key):
+    os.environ["OPENAI_API_KEY"] = key
+    openai.api_key = key
 
 ##====== Basic Setup =======================================
 

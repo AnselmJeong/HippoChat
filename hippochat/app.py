@@ -9,7 +9,9 @@ from langchain.callbacks import StreamlitCallbackHandler, StreamingStdOutCallbac
 from utilities import (
     ChromaDB,
     Summarizer,
-    get_doc_type
+    get_doc_type,
+    is_openai_key_valid,
+    set_openai_key
 )
 
 
@@ -113,6 +115,10 @@ def display_sources(response, expanded=False):
                 for j, source in enumerate(unique_sources):
                     tabs[j].markdown(f"Document: **:red[{source.metadata['source'].replace('uploaded/', '')}]**")
                     tabs[j].markdown(source.page_content)
+                    
+                    
+def change_openai_api_key():
+    set_openai_key(st.session_state['openai_api_key'])
 
 # Initialise session state variables
 st_callback = StreamlitCallbackHandler(st.container())
@@ -149,6 +155,13 @@ st.session_state['directories'] = get_directories()
 # Sidebar - let user choose model, show total cost of current conversation, and let user clear the current conversation
 
 with st.sidebar:
+    if not is_openai_key_valid():
+        st.text_input("Enter Valid _OPENAI API KEY_",
+                      key="openai_api_key",
+                      type="password",
+                      on_change=change_openai_api_key)
+        print(st.session_state['openai_api_key'])
+        print(os.environ['OPENAI_API_KEY'])
     
     
     directory_container = st.container()

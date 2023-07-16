@@ -1,0 +1,14 @@
+hippochat/__pycache__/utilities.cpython-311.pyc
+.DS_Store
+.GPT_symptom/chroma-collections.parquet
+.GPT_symptom/chroma-embeddings.parquet
+.GPT_symptom/index/id_to_uuid_e07a72ad-af48-4db6-8f6c-3b333cc6a738.pkl
+.GPT_symptom/index/index_e07a72ad-af48-4db6-8f6c-3b333cc6a738.bin
+.GPT_symptom/index/index_metadata_e07a72ad-af48-4db6-8f6c-3b333cc6a738.pkl
+.GPT_symptom/index/uuid_to_id_e07a72ad-af48-4db6-8f6c-3b333cc6a738.pkl
+.nene/chroma-collections.parquet
+.nene/chroma-embeddings.parquet
+.nene/index/id_to_uuid_52b347dc-5c08-4dec-b4a6-b7aa9148665d.pkl
+.nene/index/index_52b347dc-5c08-4dec-b4a6-b7aa9148665d.bin
+.nene/index/index_metadata_52b347dc-5c08-4dec-b4a6-b7aa9148665d.pkl
+.nene/index/uuid_to_id_52b347dc-5c08-4dec-b4a6-b7aa9148665d.pkl

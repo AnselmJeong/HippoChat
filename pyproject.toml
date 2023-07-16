@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "hippochat"
+version = "0.1.0"
+description = ""
+authors = ["Anselm Jeong <AnselmJeong@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langchain = "^0.0.233"
+openai = "^0.27.8"
+chromadb = "^0.3.29"
+unstructured = "^0.8.1"
+streamlit = "^1.24.1"
+tiktoken = "^0.4.0"
+watchdog = "^3.0.0"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -40,7 +40,7 @@ def get_directories(path="./"):
     directories.insert(0, "None")
     return directories
 
-def get_files(path="./uploaded"):
+def get_files(path="../uploaded"):
     file_paths = [os.path.join(path, f) for f in os.listdir(path) if  os.path.isfile(os.path.join(path,f))]
 
     return file_paths
@@ -81,7 +81,7 @@ def add_documents(files):
     if len(files) > 0:
         file_paths = []
         for file in files:
-            file_path = os.path.join("./uploaded/", file.name)
+            file_path = os.path.join("../uploaded/", file.name)
             with open(file_path,"wb") as f: 
                 f.write(file.getbuffer())
                 file_paths.append(file_path)

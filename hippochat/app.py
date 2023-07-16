@@ -40,7 +40,7 @@ def get_directories(path="./"):
     directories.insert(0, "None")
     return directories
 
-def get_files(path="../uploaded"):
+def get_files(path="uploaded"):
     file_paths = [os.path.join(path, f) for f in os.listdir(path) if  os.path.isfile(os.path.join(path,f))]
 
     return file_paths
@@ -81,7 +81,7 @@ def add_documents(files):
     if len(files) > 0:
         file_paths = []
         for file in files:
-            file_path = os.path.join("../uploaded/", file.name)
+            file_path = os.path.join("uploaded/", file.name)
             with open(file_path,"wb") as f: 
                 f.write(file.getbuffer())
                 file_paths.append(file_path)
@@ -175,35 +175,42 @@ with st.sidebar:
                           on_change=create_new_project)
             
             
-    with task_container:
-        st.session_state['todo'] = st.selectbox(
-            label='Choose a task type',
-            options=['Ingest pdf documents', 'Ingest website by crawling']
-        )
+    if st.session_state['db']:
+        with task_container:
+            st.session_state['todo'] = st.selectbox(
+                label='Choose a task type',
+                options=['Ingest pdf documents', 'Ingest website by crawling']
+            )
+            
+            if st.session_state['todo'] == 'Ingest pdf documents':
+                # st.session_state['grobid'] = st.radio("Grobid segmentation?",
+                #                                 [False, True],
+                #                                 horizontal=True)
+                
+                with st.form("upload-form", clear_on_submit=True):
+                    uploaded_files = st.file_uploader("pdfs to ingest..", type="pdf", 
+                                            accept_multiple_files=True, label_visibility='hidden')
+                    submitted = st.form_submit_button("submit")
+                with st.spinner("Wait for ingestion..."):        
+                    add_documents(uploaded_files)
+                
+            elif st.session_state['todo'] == "Ingest website by crawling":
+                st.session_state['root_url'] = st.text_input("Enter the root URL to crawl", placeholder="http(s)://")
+                if len(st.session_state['root_url']):
+                    st.session_state['error']=add_root_url(st.session_state['root_url'])
         
-        if st.session_state['todo'] == 'Ingest pdf documents':
-            # st.session_state['grobid'] = st.radio("Grobid segmentation?",
-            #                                 [False, True],
-            #                                 horizontal=True)
-            uploaded_files = st.file_uploader("pdfs to ingest..", type="pdf", 
-                            accept_multiple_files=True, label_visibility='hidden')
-            
-            add_documents(uploaded_files)
-            
-        elif st.session_state['todo'] == "Ingest website by crawling":
-            st.session_state['root_url'] = st.text_input("Enter the root URL to crawl", placeholder="http(s)://")
-            if len(st.session_state['root_url']):
-                st.session_state['error']=add_root_url(st.session_state['root_url'])
-    
-    with option_container:
-        st.radio("LLM model",
-                 ["gpt-3.5-turbo", "gpt-4"],
-                 key="llm_model",
-                 on_change=project_changed,
-                 horizontal=True)
-        st.session_state['retrieval_type'] = st.radio("Retrival type",
-                                                      ['similarity', 'mmr', 'compress', 'multi'])
-        st.session_state['k'] = st.slider("k value", 2, 8, 4, step=1)    
+        with option_container:
+            st.radio("LLM model",
+                    ["gpt-3.5-turbo", "gpt-4"],
+                    key="llm_model",
+                    on_change=project_changed,
+                    horizontal=True)
+            st.session_state['retrieval_type'] = st.radio("Retrival type",
+                                                        ['similarity', 'mmr', 'compress', 'multi'])
+            st.session_state['k'] = st.slider("k value", 2, 8, 4, step=1)    
+    else:
+        with st.container():
+            st.error("DB not selected")
             
     with status_container:
         if st.session_state['error']:
